@@ -12,13 +12,12 @@
 
 #import "SEMenuItem.h"
 
-#define kLeftItemMargin             8.0f
-#define kTopItemMargin              8.0f
-#define kItemLabelHeight            16.0f
+#define kItemLabelTopMargin         2.f
+#define kItemLabelHeight            16.f
 
-#define kTopBarHeight               44.0f
-#define kPageControlHeight          20.0f
-#define kPageControlTopMargin       7.0f
+#define kTopBarHeight               44.f
+#define kPageControlHeight          20.f
+#define kPageControlTopMargin       27.f
 
 #define kNotificationNameCloseView  @"closeView"
 
@@ -28,8 +27,7 @@
     UIImage *launcherImage;
     NSMutableArray *items;
     
-    CGSize itemSizeForRetinaDisplay;
-    
+    CGRect itemRectForRetinaDisplay;
     UIColor *itemLabelColor;
     UIColor *itemLabelShadowColor;
     CGPoint itemLabelShadowOffset;
@@ -49,14 +47,14 @@
 @property (nonatomic, retain) UIColor *itemLabelShadowColor;
 @property (nonatomic, assign) CGPoint itemLabelShadowOffset;
 
-@property (nonatomic, assign) CGSize itemSizeForRetinaDisplay;
+@property (nonatomic, assign) CGRect itemRectForRetinaDisplay;
 
 @property (nonatomic, readonly) UIView *topBar;
 @property (nonatomic, readonly) UILabel *topBarTitleLabel;
 @property (nonatomic, readonly) UIScrollView *itemsContainer;
 @property (nonatomic, retain) UIPageControl *pageControl;
 
-- (CGSize)itemSize;
+- (CGRect)itemRect;
 
 - (id)initWithTitle:(NSString *)aTitle items:(NSMutableArray *)someItems andLauncherImage:(UIImage *)aLauncherImage;
 - (id)initWithItems:(NSMutableArray *)someItems andLauncherImage:(UIImage *)aLauncherImage;

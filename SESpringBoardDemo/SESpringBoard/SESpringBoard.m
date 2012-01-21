@@ -57,25 +57,25 @@
 
 #pragma mark - Properties
 
-@synthesize itemSizeForRetinaDisplay, items, title, launcherImage;
+@synthesize itemRectForRetinaDisplay, items, title, launcherImage;
 
 @synthesize itemLabelColor, itemLabelShadowColor, itemLabelShadowOffset;
 
 @synthesize topBar, topBarTitleLabel, navigationController, itemsContainer, pageControl;
 
-- (CGSize)itemSize
+- (CGRect)itemRect
 {
-    return (self.isRetinaDisplay ? self.itemSizeForRetinaDisplay : CGSizeMake(self.itemSizeForRetinaDisplay.width / 2, self.itemSizeForRetinaDisplay.height / 2));
+    return (self.isRetinaDisplay ? self.itemRectForRetinaDisplay : CGRectMake(self.itemRectForRetinaDisplay.origin.x / 2, self.itemRectForRetinaDisplay.origin.y / 2, self.itemRectForRetinaDisplay.size.width / 2, self.itemRectForRetinaDisplay.size.height / 2));
 }
 
 - (CGSize)itemSizeWithSeparator
 {
-    return CGSizeMake(self.itemSize.width + (kLeftItemMargin * 2 * self.displayScale), self.itemSize.height + (kTopBarHeight * 2 * self.displayScale));
+    return CGSizeMake(self.itemRect.size.width + (self.itemRect.origin.x * 2 * self.displayScale), self.itemRect.size.height + (self.itemRect.origin.y * 2 * self.displayScale));
 }
 
-- (void)setItemSizeForRetinaDisplay:(CGSize)anItemSize
+- (void)setItemRectForRetinaDisplay:(CGRect)anItemRect
 {
-    itemSizeForRetinaDisplay = anItemSize;
+    itemRectForRetinaDisplay = anItemRect;
     
     [self setupItemsContainer];
 }
@@ -114,7 +114,7 @@
     if (self.isPageControlVisible)
         heightToSubstract += self.pageControl.frame.size.height;
     
-    CGFloat heightWithSeparator = self.itemSizeWithSeparator.height;
+    CGFloat heightWithSeparator = self.itemSizeWithSeparator.height + kItemLabelTopMargin + kItemLabelHeight;
     return (NSUInteger)((self.frame.size.height - heightToSubstract) / heightWithSeparator);
 }
 
@@ -165,49 +165,64 @@
     self.itemsContainer.scrollEnabled = YES;
     self.itemsContainer.pagingEnabled = YES;
     self.itemsContainer.showsHorizontalScrollIndicator = NO;
+    self.itemsContainer.showsVerticalScrollIndicator = NO;
     
     [self addSubview:self.itemsContainer];
     
     int counter = 0;
     
-    int horizontalGap = 0;
+    int horizontalGap;
     int verticalGap = 0;
+    int rowIndex = 0;
+    int columnIndex = 0;
     
     NSUInteger numberOfItemsHorizontally = self.nrOfItemsHorizontally;
-    //        NSUInteger numberOfItemsVertically = self.nrOfItemsVertically;
+    NSUInteger numberOfItemsVertically = self.nrOfItemsVertically;
     NSUInteger numberOfItemsOnPage = self.nrOfItemsOnPage;
     int numberOfPages = (ceil((float)self.items.count / numberOfItemsOnPage));
     int currentPage = 0;
-    for (SEMenuItem *item in self.items) {
-        SEMenuItemView *itemView = [[SEMenuItemView alloc] initWithMenuItem:item andSpringBoard:self];
+    
+    for (SEMenuItem *item in self.items)
+    {
         currentPage = counter / numberOfItemsOnPage;
-        itemView.tag = counter;
-        CGRect frame = CGRectMake(kLeftItemMargin + horizontalGap + (currentPage * self.frame.size.width), verticalGap + kTopItemMargin, self.itemSize.width + kLeftItemMargin, self.itemSize.height + kTopItemMargin + kItemLabelHeight);
-        itemView.frame = frame;
-        [itemsContainer addSubview:itemView];
-        horizontalGap = (self.itemSize.width + kLeftItemMargin) * (counter + 1) + (kLeftItemMargin * counter);
-        counter = counter + 1;
-        if(counter % numberOfItemsHorizontally == 0) {
-            verticalGap = verticalGap + self.itemSize.height + kTopItemMargin;
+        columnIndex = counter % numberOfItemsHorizontally;
+        rowIndex = (counter / numberOfItemsHorizontally) % numberOfItemsHorizontally;
+        
+        if (rowIndex >= numberOfItemsVertically)
+            rowIndex = 0;
+        if (columnIndex >= numberOfItemsHorizontally)
+            columnIndex = 0;
+        
+        if (columnIndex == 0)
             horizontalGap = 0;
-        }
-        if (counter % numberOfItemsOnPage == 0) {
-            verticalGap = 0;
-        }
+        
+        horizontalGap = (self.itemRect.size.width + self.itemRect.origin.x) * (columnIndex) + (self.itemRect.origin.x * columnIndex);
+        verticalGap = (self.itemRect.size.height + self.itemRect.origin.y + self.itemRect.origin.y + kItemLabelHeight + kItemLabelTopMargin) * rowIndex;
+        
+        SEMenuItemView *itemView = [[SEMenuItemView alloc] initWithMenuItem:item andSpringBoard:self];
+        itemView.tag = counter;
+        CGRect frame = CGRectMake(self.itemRect.origin.x + horizontalGap + (currentPage * self.frame.size.width), verticalGap + self.itemRect.origin.y, self.itemRect.size.width + self.itemRect.origin.x, self.itemRect.size.height + self.itemRect.origin.y + kItemLabelHeight + kItemLabelTopMargin);
+        itemView.frame = frame;
+        
+        [itemsContainer addSubview:itemView];
         [itemView release];
+        
+        counter++;
     }
     
     self.itemsContainer.contentSize = CGSizeMake((numberOfPages * self.frame.size.width), itemsContainer.frame.size.height);
     
     // Add a page control representing the page the scrollview controls
-    pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, self.frame.size.height - kPageControlHeight - kPageControlTopMargin, self.frame.size.width, kPageControlHeight)];
+    CGRect pageControlFrame = CGRectMake(0, self.frame.size.height - kPageControlHeight - kPageControlTopMargin, self.frame.size.width, kPageControlHeight);
+    pageControl = [[UIPageControl alloc] initWithFrame:pageControlFrame];
     if (numberOfPages > 1) {
         self.pageControl.numberOfPages = numberOfPages;
         self.pageControl.currentPage = 0;
         
         // Substract page control's height from items container
         self.itemsContainer.frame = CGRectMake(self.itemsContainer.frame.origin.x, self.itemsContainer.frame.origin.y, self.frame.size.width, self.frame.size.height - self.pageControl.frame.size.height);
-        
+        self.itemsContainer.contentSize = CGSizeMake((numberOfPages * self.frame.size.width), itemsContainer.frame.size.height);
+
         [self addSubview:self.pageControl];
     }
 }
@@ -244,7 +259,7 @@
         self.itemLabelShadowColor = [UIColor grayColor];
         self.itemLabelShadowOffset = CGPointMake(0, 0);
         
-        itemSizeForRetinaDisplay = CGSizeMake(128.f, 128.f);
+        itemRectForRetinaDisplay = CGRectMake(50.f, 50.f, 100.f, 100.f);
         
         self.title = aTitle;
         self.items = someItems;
@@ -385,7 +400,7 @@
         self.menuItem = aMenuItem;
         self.springBoard = aSpringBoard;
         
-        self.frame = CGRectMake(0, 0, aSpringBoard.itemSize.width, aSpringBoard.itemSize.height + kItemLabelHeight);
+        self.frame = CGRectMake(0, 0, aSpringBoard.itemRect.size.width, aSpringBoard.itemRect.size.height + kItemLabelHeight);
     }
             
     return self;
