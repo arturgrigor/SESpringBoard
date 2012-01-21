@@ -31,6 +31,7 @@
 		75272FC21465FF6A004F0CF3 /* technorati.png in Resources */ = {isa = PBXBuildFile; fileRef = 75272FBF1465FF6A004F0CF3 /* technorati.png */; };
 		75272FC31465FF6A004F0CF3 /* su.png in Resources */ = {isa = PBXBuildFile; fileRef = 75272FC01465FF6A004F0CF3 /* su.png */; };
 		75272FC41465FF6A004F0CF3 /* digg.png in Resources */ = {isa = PBXBuildFile; fileRef = 75272FC11465FF6A004F0CF3 /* digg.png */; };
+		FE53898014CA6FA5000164A7 /* MKNumberBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = FE53897F14CA6FA5000164A7 /* MKNumberBadgeView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,6 +68,8 @@
 		75272FBF1465FF6A004F0CF3 /* technorati.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = technorati.png; sourceTree = "<group>"; };
 		75272FC01465FF6A004F0CF3 /* su.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = su.png; sourceTree = "<group>"; };
 		75272FC11465FF6A004F0CF3 /* digg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = digg.png; sourceTree = "<group>"; };
+		FE53897E14CA6FA5000164A7 /* MKNumberBadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKNumberBadgeView.h; sourceTree = "<group>"; };
+		FE53897F14CA6FA5000164A7 /* MKNumberBadgeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKNumberBadgeView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +145,7 @@
 		7514C0E814654F1F00FEF1E6 /* SESpringBoard */ = {
 			isa = PBXGroup;
 			children = (
+				FE53897C14CA6FA5000164A7 /* Externals */,
 				7514C0E914654F5C00FEF1E6 /* SEMenuItem.h */,
 				7514C0EA14654F5C00FEF1E6 /* SEMenuItem.m */,
 				7514C0EC14654F9B00FEF1E6 /* SESpringBoard.h */,
@@ -169,6 +173,23 @@
 				7514C12D1465BC5000FEF1E6 /* navbtn_home@2x.png */,
 			);
 			path = Icons;
+			sourceTree = "<group>";
+		};
+		FE53897C14CA6FA5000164A7 /* Externals */ = {
+			isa = PBXGroup;
+			children = (
+				FE53897D14CA6FA5000164A7 /* MKNumberBadgeView */,
+			);
+			path = Externals;
+			sourceTree = "<group>";
+		};
+		FE53897D14CA6FA5000164A7 /* MKNumberBadgeView */ = {
+			isa = PBXGroup;
+			children = (
+				FE53897E14CA6FA5000164A7 /* MKNumberBadgeView.h */,
+				FE53897F14CA6FA5000164A7 /* MKNumberBadgeView.m */,
+			);
+			path = MKNumberBadgeView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -252,6 +273,7 @@
 				7514C0EE14654F9C00FEF1E6 /* SESpringBoard.m in Sources */,
 				7514C12A1465AA4900FEF1E6 /* ChildViewController.m in Sources */,
 				7514C1321465BC9C00FEF1E6 /* SEViewController.m in Sources */,
+				FE53898014CA6FA5000164A7 /* MKNumberBadgeView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -42,4 +42,9 @@
     return self;
 }
 
++ (SEMenuItem *)menuItemWithTitle:(NSString *)aTitle image:(UIImage *)aImage andViewController:(SEViewController *)aViewController
+{
+    return [[[SEMenuItem alloc] initWithTitle:aTitle image:aImage andViewController:aViewController] autorelease];
+}
+
 @end

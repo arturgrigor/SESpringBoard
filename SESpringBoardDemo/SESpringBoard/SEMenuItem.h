@@ -29,5 +29,6 @@
 @property (nonatomic, assign) NSUInteger tag;
 
 - (id)initWithTitle:(NSString *)aTitle image:(UIImage *)aImage andViewController:(SEViewController *)aViewController;
++ (SEMenuItem *)menuItemWithTitle:(NSString *)aTitle image:(UIImage *)aImage andViewController:(SEViewController *)aViewController;
 
 @end
