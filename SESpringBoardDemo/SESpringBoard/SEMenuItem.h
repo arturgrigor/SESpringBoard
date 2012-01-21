@@ -5,27 +5,29 @@
 //  Created by Sarp Erdag on 11/5/11.
 //  Copyright (c) 2011 Sarp Erdag. All rights reserved.
 //
+//  Modified by Artur Grigor on 21/01/12.
+//
 
 #import <UIKit/UIKit.h>
 
-@protocol MenuItemDelegate;
-@interface SEMenuItem : UIView {
-    NSString *image;
-    NSString *titleText;
-    UIViewController *vcToLoad;
-    id <MenuItemDelegate> delegate;
+#import "SEViewController.h"
+
+@interface SEMenuItem : NSObject {
+    UIImage *image;
+    NSString *title;
+    NSUInteger badge;
+    SEViewController *viewController;
+    
+    NSUInteger tag;
 }
 
-@property (nonatomic, assign) int tag;
-@property (nonatomic, assign) id <MenuItemDelegate> delegate;
+@property (nonatomic, retain) UIImage *image;
+@property (nonatomic, retain) NSString *title;
+@property (nonatomic, assign) NSUInteger badge;
+@property (nonatomic, retain) SEViewController *viewController;
 
-+ (id) initWithTitle:(NSString *)title imageName:(NSString *)imageName viewController:(UIViewController *)viewController;
+@property (nonatomic, assign) NSUInteger tag;
 
-@end
-
-@protocol MenuItemDelegate <NSObject>
-@optional
-
-- (void)launch:(int)index :(UIViewController *)vcToLoad;
+- (id)initWithTitle:(NSString *)aTitle image:(UIImage *)aImage andViewController:(SEViewController *)aViewController;
 
 @end

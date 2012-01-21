@@ -5,21 +5,60 @@
 //  Created by Sarp Erdag on 11/5/11.
 //  Copyright (c) 2011 Sarp Erdag. All rights reserved.
 //
+//  Modified by Artur Grigor on 21/01/12.
+//
 
 #import <UIKit/UIKit.h>
+
 #import "SEMenuItem.h"
 
-@interface SESpringBoard : UIView <MenuItemDelegate, UIScrollViewDelegate> {
+#define kLeftItemMargin             8.0f
+#define kTopItemMargin              8.0f
+#define kItemLabelHeight            16.0f
+
+#define kTopBarHeight               44.0f
+#define kPageControlHeight          20.0f
+#define kPageControlTopMargin       7.0f
+
+#define kNotificationNameCloseView  @"closeView"
+
+@interface SESpringBoard : UIView<UIScrollViewDelegate>
+{
+    NSString *title;
+    UIImage *launcherImage;
+    NSMutableArray *items;
+    
+    CGSize itemSizeForRetinaDisplay;
+    
+    UIColor *itemLabelColor;
+    UIColor *itemLabelShadowColor;
+    CGPoint itemLabelShadowOffset;
+    
     UIView *topBar;
-    UINavigationController *nav;
+    UILabel *topBarTitleLabel;
+    UINavigationController *navigationController;
     UIScrollView *itemsContainer;
     UIPageControl *pageControl;
-} 
+}
 
 @property (nonatomic, retain) NSString *title;
-@property (nonatomic, retain) UIImage *launcher;
+@property (nonatomic, retain) UIImage *launcherImage;
 @property (nonatomic, retain) NSMutableArray *items;
 
-+ (id) initWithTitle:(NSString *)boardTitle items:(NSMutableArray *)menuItems launcherImage:(UIImage *)image;
+@property (nonatomic, retain) UIColor *itemLabelColor;
+@property (nonatomic, retain) UIColor *itemLabelShadowColor;
+@property (nonatomic, assign) CGPoint itemLabelShadowOffset;
+
+@property (nonatomic, assign) CGSize itemSizeForRetinaDisplay;
+
+@property (nonatomic, readonly) UIView *topBar;
+@property (nonatomic, readonly) UILabel *topBarTitleLabel;
+@property (nonatomic, readonly) UIScrollView *itemsContainer;
+@property (nonatomic, retain) UIPageControl *pageControl;
+
+- (CGSize)itemSize;
+
+- (id)initWithTitle:(NSString *)aTitle items:(NSMutableArray *)someItems andLauncherImage:(UIImage *)aLauncherImage;
+- (id)initWithItems:(NSMutableArray *)someItems andLauncherImage:(UIImage *)aLauncherImage;
 
 @end
