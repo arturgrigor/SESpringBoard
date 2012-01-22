@@ -23,6 +23,8 @@
 
 @interface SESpringBoard : UIView<UIScrollViewDelegate>
 {
+    int displayScale;
+    
     NSString *title;
     UIImage *launcherImage;
     NSMutableArray *items;
@@ -31,7 +33,6 @@
     NSUInteger numberOfItemsVertically;
     
     CGSize itemSize;
-    CGSize itemSizeForRetinaDisplay;
     UIColor *itemLabelColor;
     UIColor *itemLabelShadowColor;
     CGPoint itemLabelShadowOffset;
@@ -53,7 +54,7 @@
 
 @property (nonatomic, assign) NSUInteger numberOfItemsHorizontally;
 @property (nonatomic, assign) NSUInteger numberOfItemsVertically;
-@property (nonatomic, assign) CGSize itemSizeForRetinaDisplay;
+@property (nonatomic, assign) CGSize itemSize;
 
 @property (nonatomic, readonly) UIView *topBar;
 @property (nonatomic, readonly) UILabel *topBarTitleLabel;

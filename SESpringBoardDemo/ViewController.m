@@ -72,7 +72,11 @@
     
     SESpringBoard *board = [[SESpringBoard alloc] initWithTitle:@"Welcome" items:items andLauncherImage:[UIImage imageNamed:@"navbtn_home.png"]];
 
-//    board.itemRectForRetinaDisplay = CGRectMake(30, 30, 100, 100);
+    board.itemSize = CGSizeMake(50, 50);
+    board.numberOfItemsVertically = 5;
+    board.numberOfItemsHorizontally = 3;
+    board.itemLabelColor = [UIColor whiteColor];
+    
     [self.view addSubview:board];
 }
 

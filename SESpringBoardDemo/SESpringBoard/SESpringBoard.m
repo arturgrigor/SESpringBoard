@@ -36,7 +36,6 @@
 
 - (void)launchWithTag:(NSUInteger)tag andViewController:(SEViewController *)aViewController;
 
-- (BOOL)isRetinaDisplay;
 - (NSUInteger)displayScale;
 
 - (NSUInteger)nrOfItemsOnPage;
@@ -55,7 +54,7 @@
 
 #pragma mark - Properties
 
-@synthesize itemRect, itemSizeForRetinaDisplay, numberOfItemsVertically, numberOfItemsHorizontally, items, title, launcherImage;
+@synthesize itemRect, itemSize, numberOfItemsVertically, numberOfItemsHorizontally, items, title, launcherImage;
 
 @synthesize itemLabelColor, itemLabelShadowColor, itemLabelShadowOffset;
 
@@ -63,25 +62,25 @@
 
 - (CGRect)itemRect
 {
-    if (CGRectIsEmpty(itemRect) && !CGSizeEqualToSize(itemSizeForRetinaDisplay, CGSizeZero))
+    if (CGRectIsEmpty(itemRect) && !CGSizeEqualToSize(itemSize, CGSizeZero))
     {
         CGFloat heightToSubstract = kPageControlHeight + kPageControlTopMargin;
         if (self.isTopBarVisible)
             heightToSubstract += self.topBar.frame.size.height;
         
-        CGFloat width = (self.isRetinaDisplay ? itemSizeForRetinaDisplay.width : itemSizeForRetinaDisplay.width / 2);
-        CGFloat height = (self.isRetinaDisplay ? itemSizeForRetinaDisplay.height : itemSizeForRetinaDisplay.height / 2);
-        CGFloat leftMargin = ceil((self.frame.size.width - (numberOfItemsHorizontally * width)) / ((numberOfItemsHorizontally + 1) * 2));
-        CGFloat topMargin = ceil((self.frame.size.height - heightToSubstract - (numberOfItemsVertically * height)) / ((numberOfItemsVertically + 1) * 2));
+        CGFloat width = itemSize.width;
+        CGFloat height = itemSize.height;
+        CGFloat leftMargin =  (self.frame.size.width - (numberOfItemsHorizontally * width)) / ((numberOfItemsHorizontally + 1) * 2);
+        CGFloat topMargin = (self.frame.size.height - heightToSubstract - (numberOfItemsVertically * height)) / ((numberOfItemsVertically + 1) * 2);
         
         itemRect = CGRectMake(leftMargin, topMargin, width, height);
     }
     return itemRect;
 }
 
-- (void)setItemSizeForRetinaDisplay:(CGSize)anItemSize
+- (void)setItemSize:(CGSize)anItemSize
 {
-    itemSizeForRetinaDisplay = anItemSize;
+    itemSize = anItemSize;
     
     [self setupItemsContainer];
 }
@@ -102,20 +101,12 @@
 
 #pragma mark - Private
 
-- (BOOL)isRetinaDisplay
-{
-    __block BOOL result = NO;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        result = [[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] && ([UIScreen mainScreen].scale == 2.0);
-    });
-    
-    return result;
-}
-
 - (NSUInteger)displayScale
 {
-    return (self.isRetinaDisplay ? 2 : 1);
+    if (displayScale == -1) {
+        displayScale = ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] && ([UIScreen mainScreen].scale == 2.0) ? 2 : 1);
+    }
+    return displayScale;
 }
 
 - (NSUInteger)nrOfItemsOnPage
@@ -183,6 +174,8 @@
     int numberOfPages = (ceil((float)self.items.count / numberOfItemsOnPage));
     int currentPage = 0;
     
+    CGFloat labelSize = kItemLabelTopMargin + kItemLabelHeight;
+    
     for (SEMenuItem *item in self.items)
     {
         currentPage = counter / numberOfItemsOnPage;
@@ -202,7 +195,7 @@
         
         SEMenuItemView *itemView = [[SEMenuItemView alloc] initWithMenuItem:item andSpringBoard:self];
         itemView.tag = counter;
-        CGRect frame = CGRectMake(self.itemRect.origin.x + horizontalGap + (currentPage * self.itemsContainer.frame.size.width),self.itemRect.origin.y + verticalGap, self.itemRect.size.width + self.itemRect.origin.x, self.itemRect.size.height + self.itemRect.origin.y);
+        CGRect frame = CGRectMake(self.itemRect.origin.x * 2 + horizontalGap + (currentPage * self.itemsContainer.frame.size.width), self.itemRect.origin.y * 2 + verticalGap, self.itemRect.size.width, self.itemRect.size.height + labelSize);
         itemView.frame = frame;
         
         [itemsContainer addSubview:itemView];
@@ -262,13 +255,15 @@
     if (self) {
         [self setUserInteractionEnabled:YES];
         
+        displayScale = -1;
+        
         self.itemLabelColor = [UIColor blackColor];
         self.itemLabelShadowColor = [UIColor grayColor];
         self.itemLabelShadowOffset = CGPointMake(0, 0);
         
         self.numberOfItemsHorizontally = 4;
         self.numberOfItemsVertically = 5;
-        itemSizeForRetinaDisplay = CGSizeMake(114.f, 114.f);
+        itemSize = CGSizeMake(57.f, 57.f);
         
         self.title = aTitle;
         self.items = someItems;
@@ -408,8 +403,6 @@
         
         self.menuItem = aMenuItem;
         self.springBoard = aSpringBoard;
-        
-        self.frame = CGRectMake(0, 0, aSpringBoard.itemRect.size.width, aSpringBoard.itemRect.size.height);
     }
             
     return self;
