@@ -30,10 +30,10 @@
     // Create an array of SEMenuItem objects
     NSMutableArray *items = [NSMutableArray array];
     [items addObject:[SEMenuItem menuItemWithTitle:@"facebook" image:[UIImage imageNamed:@"facebook"] andViewController:vc1]];
-    [items addObject:[SEMenuItem menuItemWithTitle:@"twitter" image:[UIImage imageNamed:@"twitter"] andViewController:vc2]];
-    [items addObject:[SEMenuItem menuItemWithTitle:@"youtube" image:[UIImage imageNamed:@"youtube"] andViewController:vc1]];
-    [items addObject:[SEMenuItem menuItemWithTitle:@"linkedin" image:[UIImage imageNamed:@"linkedin"] andViewController:vc2]];
-    [items addObject:[SEMenuItem menuItemWithTitle:@"rss" image:[UIImage imageNamed:@"rss"] andViewController:vc1]];
+    [items addObject:[SEMenuItem menuItemWithTitle:@"twitter" image:[UIImage imageNamed:@"facebook"] andViewController:vc2]];
+    [items addObject:[SEMenuItem menuItemWithTitle:@"youtube" image:[UIImage imageNamed:@"facebook"] andViewController:vc1]];
+    [items addObject:[SEMenuItem menuItemWithTitle:@"linkedin" image:[UIImage imageNamed:@"facebook"] andViewController:vc2]];
+    [items addObject:[SEMenuItem menuItemWithTitle:@"rss" image:[UIImage imageNamed:@"facebook"] andViewController:vc1]];
     [items addObject:[SEMenuItem menuItemWithTitle:@"google" image:[UIImage imageNamed:@"google"] andViewController:vc2]];
     [items addObject:[SEMenuItem menuItemWithTitle:@"stumbleupon" image:[UIImage imageNamed:@"su"] andViewController:vc1]];
     [items addObject:[SEMenuItem menuItemWithTitle:@"digg" image:[UIImage imageNamed:@"digg"] andViewController:vc2]];
@@ -71,6 +71,7 @@
     // after a SEMenuItem is tapped. It is used for going back to the home screen
     
     SESpringBoard *board = [[SESpringBoard alloc] initWithTitle:@"Welcome" items:items andLauncherImage:[UIImage imageNamed:@"navbtn_home.png"]];
+
 //    board.itemRectForRetinaDisplay = CGRectMake(30, 30, 100, 100);
     [self.view addSubview:board];
 }

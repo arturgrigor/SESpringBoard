@@ -27,7 +27,11 @@
     UIImage *launcherImage;
     NSMutableArray *items;
     
-    CGRect itemRectForRetinaDisplay;
+    NSUInteger numberOfItemsHorizontally;
+    NSUInteger numberOfItemsVertically;
+    
+    CGSize itemSize;
+    CGSize itemSizeForRetinaDisplay;
     UIColor *itemLabelColor;
     UIColor *itemLabelShadowColor;
     CGPoint itemLabelShadowOffset;
@@ -47,14 +51,14 @@
 @property (nonatomic, retain) UIColor *itemLabelShadowColor;
 @property (nonatomic, assign) CGPoint itemLabelShadowOffset;
 
-@property (nonatomic, assign) CGRect itemRectForRetinaDisplay;
+@property (nonatomic, assign) NSUInteger numberOfItemsHorizontally;
+@property (nonatomic, assign) NSUInteger numberOfItemsVertically;
+@property (nonatomic, assign) CGSize itemSizeForRetinaDisplay;
 
 @property (nonatomic, readonly) UIView *topBar;
 @property (nonatomic, readonly) UILabel *topBarTitleLabel;
 @property (nonatomic, readonly) UIScrollView *itemsContainer;
 @property (nonatomic, retain) UIPageControl *pageControl;
-
-- (CGRect)itemRect;
 
 - (id)initWithTitle:(NSString *)aTitle items:(NSMutableArray *)someItems andLauncherImage:(UIImage *)aLauncherImage;
 - (id)initWithItems:(NSMutableArray *)someItems andLauncherImage:(UIImage *)aLauncherImage;
