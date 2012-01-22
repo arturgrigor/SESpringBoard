@@ -424,18 +424,18 @@
         [badgeView release];
     }
     
-    UIFont *bold14 = [UIFont boldSystemFontOfSize:14.f];
+    UIFont *bold12 = [UIFont boldSystemFontOfSize:12.f];
     // Draw the menu item title shadow
     if (self.springBoard.itemLabelShadowOffset.x != 0 && self.springBoard.itemLabelShadowOffset.y != 0) {
         NSString *shadowText = self.menuItem.title;
         [self.springBoard.itemLabelShadowColor set];
-        [shadowText drawInRect:CGRectMake(self.springBoard.itemLabelShadowOffset.x, self.frame.size.height - kItemLabelTopMargin - kItemLabelHeight + self.springBoard.itemLabelShadowOffset.y, self.frame.size.width, kItemLabelHeight) withFont:bold14 lineBreakMode:UILineBreakModeTailTruncation alignment:UITextAlignmentCenter];
+        [shadowText drawInRect:CGRectMake(self.springBoard.itemLabelShadowOffset.x, self.frame.size.height - kItemLabelTopMargin - kItemLabelHeight + self.springBoard.itemLabelShadowOffset.y, self.frame.size.width, kItemLabelHeight) withFont:bold12 lineBreakMode:UILineBreakModeTailTruncation alignment:UITextAlignmentCenter];
     }
     
     // Draw the menu item title
     NSString *text = self.menuItem.title;
     [self.springBoard.itemLabelColor set];
-    [text drawInRect:CGRectMake(0, self.frame.size.height - kItemLabelTopMargin - kItemLabelHeight, self.frame.size.width, kItemLabelHeight) withFont:bold14 lineBreakMode:UILineBreakModeTailTruncation alignment:UITextAlignmentCenter];
+    [text drawInRect:CGRectMake(0, self.frame.size.height - kItemLabelTopMargin - kItemLabelHeight, self.frame.size.width, kItemLabelHeight) withFont:bold12 lineBreakMode:UILineBreakModeTailTruncation alignment:UITextAlignmentCenter];
     
     // Place a clickable button on top of everything
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
