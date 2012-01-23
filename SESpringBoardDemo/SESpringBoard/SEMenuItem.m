@@ -14,7 +14,7 @@
 
 #pragma mark - Properties
 
-@synthesize title, image, viewController, badge;
+@synthesize title, image, badge;
 
 @synthesize tag;
 
@@ -24,27 +24,25 @@
 {
     [title release];
     [image release];
-    [viewController release];
     
     [super dealloc];
 }
 
-- (id)initWithTitle:(NSString *)aTitle image:(UIImage *)aImage andViewController:(SEViewController *)aViewController
+- (id)initWithTitle:(NSString *)aTitle image:(UIImage *)aImage
 {
     self = [super init];
     if (self) {
         self.title = aTitle;
         self.image = aImage;
-        self.viewController = aViewController;
         self.badge = 0;
     }
     
     return self;
 }
 
-+ (SEMenuItem *)menuItemWithTitle:(NSString *)aTitle image:(UIImage *)aImage andViewController:(SEViewController *)aViewController
++ (SEMenuItem *)menuItemWithTitle:(NSString *)aTitle image:(UIImage *)aImage
 {
-    return [[[SEMenuItem alloc] initWithTitle:aTitle image:aImage andViewController:aViewController] autorelease];
+    return [[[SEMenuItem alloc] initWithTitle:aTitle image:aImage] autorelease];
 }
 
 @end

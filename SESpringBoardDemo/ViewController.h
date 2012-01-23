@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+#import "SESpringBoard.h"
+
+@interface ViewController : UIViewController<SESpringBoardDelegate>
 
 @property(nonatomic, retain) UIViewController *vc1;
 @property(nonatomic, retain) UIViewController *vc2;

@@ -19,7 +19,14 @@
 #define kPageControlHeight          20.f
 #define kPageControlTopMargin       27.f
 
-#define kNotificationNameCloseView  @"closeView"
+@class SESpringBoard;
+
+@protocol SESpringBoardDelegate <NSObject>
+
+@required
+- (void)springBoard:(SESpringBoard *)aSpringBoard didSelectItemWithTag:(NSUInteger)tag;
+
+@end
 
 @interface SESpringBoard : UIView<UIScrollViewDelegate>
 {
@@ -39,10 +46,13 @@
     
     UIView *topBar;
     UILabel *topBarTitleLabel;
-    UINavigationController *navigationController;
     UIScrollView *itemsContainer;
     UIPageControl *pageControl;
+    
+    id<SESpringBoardDelegate> delegate;
 }
+
+@property (nonatomic, assign) id<SESpringBoardDelegate> delegate;
 
 @property (nonatomic, retain) NSString *title;
 @property (nonatomic, retain) UIImage *launcherImage;
@@ -59,9 +69,9 @@
 @property (nonatomic, readonly) UIView *topBar;
 @property (nonatomic, readonly) UILabel *topBarTitleLabel;
 @property (nonatomic, readonly) UIScrollView *itemsContainer;
-@property (nonatomic, retain) UIPageControl *pageControl;
+@property (nonatomic, readonly) UIPageControl *pageControl;
 
-- (id)initWithTitle:(NSString *)aTitle items:(NSMutableArray *)someItems andLauncherImage:(UIImage *)aLauncherImage;
-- (id)initWithItems:(NSMutableArray *)someItems andLauncherImage:(UIImage *)aLauncherImage;
+- (id)initWithTitle:(NSString *)aTitle items:(NSMutableArray *)someItems andDelegate:(id<SESpringBoardDelegate>)aDelegate;
+- (id)initWithItems:(NSMutableArray *)someItems andDelegate:(id<SESpringBoardDelegate>)aDelegate;
 
 @end

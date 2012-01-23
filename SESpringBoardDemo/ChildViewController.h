@@ -6,10 +6,7 @@
 //  Copyright (c) 2011 Sarp Erdag. All rights reserved.
 //
 
-#import "SEViewController.h"
-
-
-@interface ChildViewController : SEViewController { 
+@interface ChildViewController : UIViewController { 
     
 }
 

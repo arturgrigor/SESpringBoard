@@ -10,7 +10,6 @@
 
 #import "SESpringBoard.h"
 
-#import "SEViewController.h"
 #import "MKNumberBadgeView.h"
 
 @interface SEMenuItemView : UIView {
@@ -28,13 +27,12 @@
 @interface SESpringBoard ()
 
 @property (nonatomic, readonly) CGRect itemRect;
-@property (nonatomic, retain) UINavigationController *navigationController;
 
 @end
 
 @interface SESpringBoard (Private)
 
-- (void)launchWithTag:(NSUInteger)tag andViewController:(SEViewController *)aViewController;
+- (void)launchWithTag:(NSUInteger)tag;
 
 - (NSUInteger)displayScale;
 
@@ -46,8 +44,6 @@
 - (void)setupTopBar;
 - (void)setupItemsContainer;
 
-- (void)closeViewEventHandler:(NSNotification *)notification;
-
 @end
 
 @implementation SESpringBoard
@@ -58,7 +54,7 @@
 
 @synthesize itemLabelColor, itemLabelShadowColor, itemLabelShadowOffset;
 
-@synthesize topBar, topBarTitleLabel, navigationController, itemsContainer, pageControl;
+@synthesize topBar, topBarTitleLabel, itemsContainer, pageControl, delegate;
 
 - (CGRect)itemRect
 {
@@ -240,19 +236,18 @@
     
     [topBarTitleLabel release];
     [topBar release];
-    [navigationController release];
     [itemsContainer release];
     [pageControl release];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationNameCloseView object:nil];
     
     [super dealloc];
 }
 
-- (id)initWithTitle:(NSString *)aTitle items:(NSMutableArray *)someItems andLauncherImage:(UIImage *)aLauncherImage
+- (id)initWithTitle:(NSString *)aTitle items:(NSMutableArray *)someItems andDelegate:(id<SESpringBoardDelegate>)aDelegate
 {
     self = [super initWithFrame:[[UIScreen mainScreen] bounds]];
     if (self) {
+        self.delegate = aDelegate;
+        
         [self setUserInteractionEnabled:YES];
         
         displayScale = -1;
@@ -267,20 +262,16 @@
         
         self.title = aTitle;
         self.items = someItems;
-        self.launcherImage = aLauncherImage;
         
         [self setupTopBar];
         [self setupItemsContainer];
-        
-        // Add listener to detect close view events
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(closeViewEventHandler:) name:kNotificationNameCloseView object:nil];
     }
     return self;
 }
 
-- (id)initWithItems:(NSMutableArray *)someItems andLauncherImage:(UIImage *)aLauncherImage
+- (id)initWithItems:(NSMutableArray *)someItems andDelegate:(id<SESpringBoardDelegate>)aDelegate
 {
-    self = [self initWithTitle:nil items:someItems andLauncherImage:aLauncherImage];
+    self = [self initWithTitle:nil items:someItems andDelegate:aDelegate];
     if (self) {
         
     }
@@ -297,51 +288,11 @@
     return CGAffineTransformMakeTranslation(xSign * parentMidpoint.x, ySign * parentMidpoint.y);
 }
 
-- (void)launchWithTag:(NSUInteger)tag andViewController:(SEViewController *)aViewController
+- (void)launchWithTag:(NSUInteger)tag
 {
-    SEViewController *viewController = aViewController;
-    viewController.launcherImage = self.launcherImage;
-    
-    // Create a navigation bar
-    self.navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
-    
-    self.navigationController.view.alpha = 0.f;
-    self.navigationController.view.transform = CGAffineTransformMakeScale(.1f, .1f);
-    [self addSubview:self.navigationController.view];
-    
-    [UIView animateWithDuration:.3f  animations:^{
-        // Fade out the buttons
-        for (SEMenuItemView *itemView in self.itemsContainer.subviews) {
-            itemView.transform = [self offscreenQuadrantTransformForView:itemView];
-            itemView.alpha = 0.f;
-        }
-        
-        // Fade in the selected view
-        self.navigationController.view.alpha = 1.f;
-        self.navigationController.view.transform = CGAffineTransformIdentity;
-        [self.navigationController.view setFrame:CGRectMake(0,0, self.bounds.size.width, self.bounds.size.height)];
-        
-        // Fade out the top bar
-        [self.topBar setFrame:CGRectMake(0, -kTopBarHeight, self.frame.size.width, kTopBarHeight)];
-    }];
-}
-
-#pragma mark - Notifications
-
-- (void)closeViewEventHandler:(NSNotification *)notification
-{
-    UIView *viewToRemove = (UIView *)notification.object;    
-    [UIView animateWithDuration:.3f animations:^{
-        viewToRemove.alpha = 0.f;
-        viewToRemove.transform = CGAffineTransformMakeScale(.1f, .1f);
-        for (SEMenuItemView *itemView in self.itemsContainer.subviews) {
-            itemView.transform = CGAffineTransformIdentity;
-            itemView.alpha = 1.f;
-        }
-        [self.topBar setFrame:CGRectMake(0, 0, self.frame.size.width, kTopBarHeight)];
-    } completion:^(BOOL finished) {
-        [viewToRemove removeFromSuperview];
-    }];
+    if ([self.delegate respondsToSelector:@selector(springBoard:didSelectItemWithTag:)]) {
+        [self.delegate springBoard:self didSelectItemWithTag:tag];
+    }
 }
 
 #pragma mark - UIScrollView Delegate Methods
@@ -449,7 +400,7 @@
 - (void)clickItem:(id)sender
 {
     UIButton *theButton = (UIButton *)sender;
-    [self.springBoard launchWithTag:theButton.tag andViewController:self.menuItem.viewController];
+    [self.springBoard launchWithTag:theButton.tag];
 }
 
 @end
